@@ -1,0 +1,17 @@
+﻿@model IEnumerable<APRERP.Models.TEstData>
+@{
+    ViewBag.Title = "Home Page";
+}
+<div class="row">
+    @(Html.Kendo().Grid(Model)
+        .Name("test")
+        .Columns(col=>
+        {
+            foreach (var item in Model)
+            {
+                col.Bound(b => item.Age);
+                col.Bound(b => item.Name);
+            }
+        })
+    )
+</div>

@@ -1,0 +1,37 @@
+﻿@model System.Data.DataRowView
+@{
+
+}
+
+<style>
+    .CustomPopUpEdit {
+        height: 500px !important;
+        overflow: scroll !important;
+    }
+</style>
+
+
+
+
+    <div id="popup_editor" type="text/x-kendo-template" class="CustomPopUpEdit">
+
+        <h4 class="text-muted">@ViewBag.ListTitle item</h4>
+
+        <hr />
+
+        @foreach (string column in ViewBag.ColumnsHeaders)
+{
+            <div class="form-group">
+                <label class="control-label" for="@column">@column</label>
+
+                <input class="form-control"
+                       type="text"
+                       name="@column"
+                       data-type="string"
+                       data-bind="value:@column" />
+            </div>
+        }
+
+    </div>
+
+

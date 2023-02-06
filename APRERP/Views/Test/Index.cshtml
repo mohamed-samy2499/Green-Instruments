@@ -1,0 +1,18 @@
+﻿@model IEnumerable<APRERP.Models.TEstData>
+@{
+    ViewBag.Title = "Home Page";
+}
+    @(Html.Kendo().Grid(Model)
+        .Name("test")
+        .HtmlAttributes(new {style= "width:100%" })
+        .Columns(col=>
+        {
+            col.Bound(b => b.Age);
+            col.Bound(b => b.Name);
+        })
+        .Navigatable()
+        .Pageable()
+        .Filterable()
+        .Sortable()
+        .Groupable()
+    )

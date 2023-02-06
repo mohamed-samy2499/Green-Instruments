@@ -1,0 +1,114 @@
+﻿@model List<System.Data.DataTable>
+
+
+
+@if (@Model != null)
+{
+
+    <style>
+        .title {
+            margin-top:50px;
+            font-weight: bold;
+            text-align: center;
+        }
+    </style>
+    var count = 0;
+
+    foreach (System.Data.DataTable DataTable in Model)
+    {
+
+        System.Data.DataTable myDataTable = DataTable.Copy();
+
+        <div class="row">
+            <h4 class="title text-info"> @ViewBag.ListTitles[count++]</h4>
+            <br />
+            @(Html.Kendo().Grid(myDataTable)
+            .Name("DayViewGrid")  .HtmlAttributes(new {style= "width:100% ;" })
+            .Columns(columns =>
+            {
+
+            foreach (System.Data.DataColumn column in myDataTable.Columns)
+            {
+
+
+                        columns.Bound(column.ColumnName).Title(column.Caption).Width(200);
+            }
+
+            @*columns.Template(@<text></text>)
+                    .ClientTemplate("<a href='"+Url.Action("Documents", "Test", new { twoFoldersPathMerged = "#=FilePath#".ToString() }) + "'>View Attatchments</a>").Title("Attachments").Width(200);*@
+                //columns.Command(cmd => {
+                //    cmd.Destroy();
+                //    cmd.Edit();
+
+                //}).Title("Modify").Width(200);
+            }
+            )
+            //.Search(s =>
+            //{
+            //    foreach (System.Data.DataColumn column in myDataTable.Columns)
+            //    {
+            //        if (column.DataType.ToString() == "System.String")
+
+            //            s.Field(column.ColumnName, "contains");
+            //        else
+            //            s.Field(column.ColumnName, "eq");
+
+            //    }
+            //})
+            //.ToolBar(tools =>
+            //{
+            //    //tools.Create();
+            //    tools.Search();
+
+
+            //})
+
+
+            //.Scrollable(a => a.Height("auto"))
+            .Scrollable(scr=>scr.Height(430))
+               .Navigatable()
+        .Pageable()
+        .Filterable()
+
+        //.Editable(ed => ed.Mode(GridEditMode.InCell))
+        .Sortable()
+        //.Editable(e => e.Mode(GridEditMode.PopUp).TemplateName("customTemplate"))
+        .Groupable()
+            .DataSource(dataSource => dataSource
+                .Ajax()
+                .Model(model =>
+                {
+
+                    model.Id("ID");
+
+                    foreach (System.Data.DataColumn column in myDataTable.Columns)
+                    {
+                        if(column.Ordinal > 0)
+                            model.Field(column.ColumnName, column.DataType);
+                    }
+                }
+
+                )
+
+                //.Read(read => read.Action("myIndex", "Test"))
+                //.Update(update => update.Action("Edit", "Test"))
+                //.Destroy(destroy => destroy.Action("Delete", "Test"))
+                .ServerOperation(false)
+            ).Resizable(resize => resize.Columns(true))
+
+           )
+        </div>
+
+
+
+
+
+    }
+
+}
+else
+{
+    <div class="alert alert-warning">
+        <h3>This list is empty!</h3>
+    </div>
+}

@@ -1,0 +1,139 @@
+
+<style>
+    .myColor {
+        background-color: #dd570b !important;
+        margin-top: 25px;
+        width: 100%;
+    }
+
+    .left {
+        text-align: left;
+        margin-top: 25px;
+    }
+</style>
+@if (ViewBag.ErrorMessage == "false")
+{
+    <div class="row">
+        <div class="col-md-4 text-center">
+            <input type="button" value="GO BACK" class="btn btn-primary myColor"
+                   onclick="location.href='@Request.UrlReferrer'" />
+
+        </div>
+        <div class="col-md-8 left">
+            <h4>Current Directory: Documents >  @ViewBag.mainDoc  >  @ViewBag.secondDoc</h4>
+        </div>
+    </div>
+
+    @(Html.Kendo().FileManager().Name("filemanager")
+        .DataSource(ds =>
+        {
+            ds.Read(operation => operation
+
+            .Action("Read", "Test" , new { twoFoldersPathMerged = ViewBag.Doc})
+        );
+            //ds.Destroy(operation => operation
+            //    .Type(HttpVerbs.Post)
+            //    .Action("Destroy", "FileManagerData")
+            //);
+            //ds.Create(operation => operation
+            //    .Type(HttpVerbs.Post)
+            //    .Action("Documents", "Test")
+            //);
+            //ds.Update(operation => operation
+            //    .Type(HttpVerbs.Post)
+            //    .Action("Update", "FileManagerData")
+            //);
+        })
+        //.UploadUrl("Upload", "FileManagerData")
+        .Toolbar(tb => tb.Items(items =>
+        {
+            //items.Add("createFolder");
+            //items.Add("upload");
+            items.Add("sortDirection");
+            items.Add("sortField");
+            items.Add("changeView");
+            items.Add("spacer");
+            items.Add("details");
+            items.Add("search");
+        }))
+
+        .ContextMenu(context => context.Items(items =>
+        {
+            //items.Add("rename");
+            items.Add("download").Command("DownloadCommand").Text("Download").SpriteCssClass("k-icon k-i-download");
+            //items.Add("delete");
+        }))
+    )
+
+<script>
+        $(document).ready(function () {
+        /*window.onerror = function (message) { alert(message); return true; };*/
+            setTimeout(function () {
+                var filemanager = $("#filemanager").data("kendoFileManager");
+
+                filemanager.navigate("Documents");
+            }, 1000);
+            var filemanager = $("#filemanager").getKendoFileManager();
+
+            filemanager.executeCommand({ command: "TogglePaneCommand", options: { type: "preview" } });
+            filemanager.toolbar.fileManagerDetailsToggle.switchInstance.toggle();
+        })
+        $(window).on("error", function (evt) {
+
+            console.log("jQuery error event:", evt);
+            var e = evt.originalEvent; // get the javascript event
+            console.log("original event:", e);
+            if (e.message) {
+                alert("There are no attachments");
+                location.href = '@Request.UrlReferrer';
+            } else {
+                alert("There are no attachments");
+                location.href = '@Request.UrlReferrer';
+
+            }
+        });
+        var filemanagerNS = kendo.ui.filemanager;
+
+        filemanagerNS.commands.DownloadCommand = filemanagerNS.FileManagerCommand.extend({
+            exec: function () {
+                var that = this,
+                    filemanager = that.filemanager, // get the kendo.ui.FileManager instance
+                    options = that.options, // get the options passed through the tool
+                    target = options.target // options.target is available only when command is executed from the context menu
+                selectedFiles = filemanager.getSelected(); // get the selected files
+
+                window.location = '/Test/Download?path=' + selectedFiles[0].path;
+
+            }
+        });
+</script>
+
+
+
+}
+else if (ViewBag.ErrorMessage == "true")
+{
+    @Html.Action("AttachmentsError");
+
+    <style>
+        .myColor {
+            background-color: #dd570b !important;
+            margin-top: 25px;
+            width: 100%;
+        }
+
+        .left {
+            text-align: left;
+            margin-top: 25px;
+        }
+    </style>
+
+    <div class="col-md-4 text-center">
+        <input type="button" value="GO BACK" class="btn btn-primary myColor"
+               onclick="location.href='@Request.UrlReferrer'" />
+
+    </div>
+    <div class="alert alert-warning">
+        <h3>There are no Attachments!</h3>
+    </div>
+}

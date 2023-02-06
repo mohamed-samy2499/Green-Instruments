@@ -1,0 +1,102 @@
+﻿@model System.Data.DataTable
+@using System.Data;
+
+<style>
+    .title {
+        font-weight: bold;
+        text-align: center;
+    }
+</style>
+@if(@Model  != null && Model.Columns.Count > 0){
+
+    <h4 class="title text-info"> @ViewBag.ListTitle</h4>
+    <br />
+@(Html.Kendo().Grid(Model)
+            .Name("DayViewGrid")  .HtmlAttributes(new {style= "width:100% ;" })
+            .Columns(columns =>
+            {
+
+            foreach (System.Data.DataColumn column in Model.Columns)
+            {
+                    if(!(@ViewBag.unwantedColumns.Contains(column.ColumnName)))
+
+                        columns.Bound(column.ColumnName).Title(column.Caption).Width(200);
+            }
+
+            columns.Template(@<text></text>)
+                    .ClientTemplate("<a href='"+Url.Action("Documents", "Test", new { twoFoldersPathMerged = "#=FilePath#".ToString() }) + "'>View Attatchments</a>").Title("Attachments").Width(200);
+                columns.Command(cmd => {
+                    cmd.Destroy();
+                    cmd.Edit();
+
+                }).Title("Modify").Width(200);
+            }
+            )
+            .Search(s =>
+            {
+                foreach (System.Data.DataColumn column in Model.Columns)
+                {
+                    if(column.DataType.ToString() == "System.String")
+
+                        s.Field(column.ColumnName, "contains");
+                    else
+                        s.Field(column.ColumnName, "eq");
+
+                }
+            })
+            .ToolBar(tools =>
+            {
+                tools.Create();
+                tools.Search();
+                
+
+            })
+        .Editable(editable => editable.Mode(GridEditMode.PopUp).Window(w => w.Title("Edit or Add new Item")).TemplateName("popup_editor"))
+        .Events(e => e.Save("onSave"))
+            //.Scrollable(a => a.Height("auto"))
+            .Scrollable(scr=>scr.Height(430))
+               .Navigatable()
+        .Pageable()
+        .Filterable()
+
+        //.Editable(ed => ed.Mode(GridEditMode.InCell))
+        .Sortable()
+        //.Editable(e => e.Mode(GridEditMode.PopUp).TemplateName("customTemplate"))
+        .Groupable()
+            .DataSource(dataSource => dataSource
+                .Ajax()
+                .Model(model =>
+                {
+
+                    model.Id("ID");
+
+                    foreach (System.Data.DataColumn column in Model.Columns)
+                    {
+                        if(column.Ordinal > 0)
+                            model.Field(column.ColumnName, column.DataType);
+                    }
+                }
+
+                )
+                .Create(create => create.Action("Create", "Test"))
+                .Read(read => read.Action("myIndex", "Test"))
+                .Update(update => update.Action("Edit", "Test"))
+                .Destroy(destroy => destroy.Action("Delete", "Test"))
+                .ServerOperation(false)
+            ).Resizable(resize => resize.Columns(true))
+
+           )
+
+
+<script>
+    function onSave(e) {
+        //alert("Item was added successfully!")
+    }
+</script>
+}
+else
+{
+<div class="alert alert-warning">
+    <h3>This list is empty!</h3>
+</div>
+}

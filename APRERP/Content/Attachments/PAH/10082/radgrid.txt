@@ -1,0 +1,26 @@
+OnNeedDataSource="RadGrid1_NeedDataSource"
+
+
+terraform.
+cloudflare.
+powershell script.
+how to you give access to cloud watch to a non aws user.
+how do you see metrics on cloud watch.
+how to transfer ebs snapshot to different region.
+highly  scalv\vblw apps design ever
+
+iis shared configuration
+pool in iis multiple pools can we create
+HA how we create
+staging to production envrionment use prewarm ebs volume
+transfer 40 gb of data to aws . snow cone , mobile or ball
+amazon message send service. 
+sql server monitor query matrics any thirdparty etc
+containers ecs , esr  aws
+cdn content delivery service like cloudfront
+how to use route 53 to make application highly available
+sql server log shipping.
+backups of database.
+aws data protection , how to protect data on servers.
+how to protect your application from unauthorized acces
+WAF used  , how to secure apps

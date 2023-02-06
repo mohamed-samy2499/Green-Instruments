@@ -1,0 +1,79 @@
+@model IEnumerable<string>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.min.js" integrity="sha512-DedNBWPF0hLGUPNbCYfj8qjlEnNE92Fqn7xd3Sscfu7ipy7Zu33unHdugqRD3c4Vj7/yLv+slqZhMls/4Oc7Zg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  
+    <style>
+        .card {
+            position: relative;
+            display: flex;
+            flex-direction: row;
+            min-width: 0;
+            /* word-wrap: break-word; */
+            background-color: #F5F5F5;
+            background-clip: border-box;
+            border-radius: 0.25rem;
+        }
+
+        .card-body {
+            flex: 1 1 auto;
+            padding: 1rem 1rem;
+        }
+
+        .card-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            padding-bottom: 12px;
+        }
+
+        .mymargin {
+            margin-top: 12px;
+            margin-bottom: 12px;
+        }
+
+        .SearchBar {
+            display: flex;
+            justify-content: center;
+            margin-top: 12px;
+            margin-bottom: 30px;
+        }
+
+        .custombutton {
+            background-color: #00332d;
+        }
+    </style>
+    @using (Html.BeginForm("SearchAllLists", "Test"))
+    {
+        <div class="SearchBar">
+            <div class=" col-sm-4">
+                <input name="SearchValue" placeholder="Search" class="form-control" />
+            </div>
+            <div class="col-sm">
+                <input type="submit" style="background-color: #00332d;" value="Search all the lists" class="btn btn-primary" />
+            </div>
+        </div>
+    }
+
+    <div id="result"></div>
+    <img id="spinner" src="https://i.stack.imgur.com/Tp29a.gif" style="display: none;">
+    
+    <div class="row">
+
+        @foreach (var list in Model)
+        {
+
+            <div class="col-md-3 mymargin">
+                <div class="card" style="background-color:#20d18e ">
+                    <div class="card-body text-center">
+                        <h5 style="color: #00332d;" class="card-title text-center text-info">@list</h5>
+                         @Html.ActionLink("Open this list", "myIndex", "Test",new { ListName = @list }, new { @class = "text-center btn btn-primary", @style = " background-color: #00332d" })
+                        @* @Ajax.ActionLink("Open this list", "myIndex", "Test", new { ListName = @list }, new AjaxOptions { UpdateTargetId = "mainbody", HttpMethod = "Post", LoadingElementId = "SomeId" })*@
+                        @*@Html.ActionLink("Open this list", "myIndex", "Test", new { ListName = @list }, new { id = @list, onclick = "showPageLoadingSpinner()" })*@
+
+                        @*@Ajax.ActionLink("Open this list", "myIndex", "Test", new { ListName = @list }, new AjaxOptions { UpdateTargetId = "result333"   }, null)*@
+                
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
